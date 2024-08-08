@@ -36,7 +36,7 @@ namespace CSharpWebApplication.Controllers
             {
                 using (var context = new ProductContext())
                 {
-                    if (!context.Products.Any(x => x.Name.ToLower().Equals(name.ToLower())
+                    if (!context.Products.Any(x => x.Name.ToLower().Equals(name.ToLower())))
                     {
                         context.Add(new Product()
                         {
