@@ -11,9 +11,6 @@ namespace CSharpWebApplication.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            //optionsBuilder.UseSqlServer(@
-            //optionsBuilder
-            //optionsBuilder.UseLazyLoadingProxies().UseNpgsql("Host=localhost;Username=postgres;Password=example;Database=Product");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
