@@ -29,8 +29,8 @@ namespace CSharpWebApplication.Controllers
                 return StatusCode(500);
             }
         }
-        [HttpPost("putProducts")]
-        public IActionResult PutProducts([FromQuery] string name, string description, double price)
+        [HttpPost("postProduct")]
+        public IActionResult PostProduct([FromQuery] string name, string description, double price)
         {
             try
             {
@@ -47,7 +47,83 @@ namespace CSharpWebApplication.Controllers
                         context.SaveChanges();
                         return Ok();
                     }
-                    else 
+                    else
+                    {
+                        return StatusCode(409);
+                    }
+                }
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
+        }
+        [HttpDelete("deleteProduct")]
+        public IActionResult DeleteProduct([FromQuery] int id)
+        {
+            try
+            {
+                using (var context = new ProductContext())
+                {
+                    if (context.Products.Any(x => x.ID == id))
+                    {
+                        var product = context.Products.Find(id);
+                        if (product != null)
+                        {
+                            context.Products.Remove(product);
+                            return Ok();
+                        }
+                        else return StatusCode(409);
+                    }
+                    else
+                    {
+                        return StatusCode(409);
+                    }
+
+                }
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
+        }
+        [HttpPut("putProduct)")]
+        public IActionResult PutProduct([FromQuery] int id, string name, string description, double price)
+        {
+            try
+            {
+                using (var context = new ProductContext())
+                {
+                    if (context.Products.Any(x => x.ID == id))
+                    {
+                        var product = context.Products.Find(id);
+                        if (product != null)
+                        {
+                            IActionResult applyChanges()
+                            {
+                                product.Name = name;
+                                product.Description = description;
+                                product.Price = price;
+                                context.Products.Update(product);
+                                return Ok();
+                            }
+                            
+                            if (!product.Name.ToLower().Equals(name.ToLower())) 
+                            {
+                                if (context.Products.Any(x => x.Name.ToLower().Equals(name.ToLower())))
+                                {
+                                    return StatusCode(409);
+                                }
+                                else return applyChanges();
+                            }
+                            else
+                            {
+                                return applyChanges();
+                            }
+                        }
+                        else return StatusCode(409);
+                    }
+                    else
                     {
                         return StatusCode(409);
                     }
