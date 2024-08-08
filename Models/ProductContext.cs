@@ -11,6 +11,7 @@ namespace CSharpWebApplication.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=productsdb;Username=postgres;Password=password");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
