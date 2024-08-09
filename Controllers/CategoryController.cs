@@ -5,23 +5,22 @@ namespace CSharpWebApplication.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class ProductController : ControllerBase
+    public class CategoryController : ControllerBase
     {
-        [HttpGet("getProducts")]
-        public IActionResult GetProducts()
+        [HttpGet("getCategories")]
+        public IActionResult GetCategories()
         {
             try
             {
                 using (var context = new ProductContext())
                 {
-                    var products = context.Products.Select(x => new Product()
+                    var categories = context.Categories.Select(x => new Category()
                     {
                         ID = x.ID,
                         Name = x.Name,
-                        Description = x.Description,
-                        Price = x.Price
+                        Description = x.Description
                     });
-                    return Ok(products);
+                    return Ok(categories);
                 }
             }
             catch
@@ -29,20 +28,20 @@ namespace CSharpWebApplication.Controllers
                 return StatusCode(500);
             }
         }
-        [HttpPost("postProduct")]
-        public IActionResult PostProduct([FromQuery] string name, string description, double price)
+
+        [HttpPost("postCategory")]
+        public IActionResult PostCategory([FromQuery] string name, string description)
         {
             try
             {
                 using (var context = new ProductContext())
                 {
-                    if (!context.Products.Any(x => x.Name.ToLower().Equals(name.ToLower())))
+                    if (!context.Categories.Any(x => x.Name.ToLower().Equals(name.ToLower())))
                     {
-                        context.Add(new Product()
+                        context.Add(new Category()
                         {
                             Name = name,
                             Description = description,
-                            Price = price
                         });
                         context.SaveChanges();
                         return Ok();
@@ -58,19 +57,19 @@ namespace CSharpWebApplication.Controllers
                 return StatusCode(500);
             }
         }
-        [HttpDelete("deleteProduct")]
-        public IActionResult DeleteProduct([FromQuery] int id)
+        [HttpDelete("deleteCategory")]
+        public IActionResult DeleteCategory([FromQuery] int id)
         {
             try
             {
                 using (var context = new ProductContext())
                 {
-                    if (context.Products.Any(x => x.ID == id))
+                    if (context.Categories.Any(x => x.ID == id))
                     {
-                        var product = context.Products.Find(id);
-                        if (product != null)
+                        var category = context.Categories.Find(id);
+                        if (category != null)
                         {
-                            context.Products.Remove(product);
+                            context.Categories.Remove(category);
                             context.SaveChanges();
                             return Ok();
                         }
@@ -88,29 +87,29 @@ namespace CSharpWebApplication.Controllers
                 return StatusCode(500);
             }
         }
-        [HttpPut("putProduct")]
-        public IActionResult PutProduct([FromQuery] int id, string name, string description, double price)
+
+        [HttpPut("putCategory")]
+        public IActionResult PutCategory([FromQuery] int id, string name, string description)
         {
             try
             {
                 using (var context = new ProductContext())
                 {
-                    if (context.Products.Any(x => x.ID == id))
+                    if (context.Categories.Any(x => x.ID == id))
                     {
-                        var product = context.Products.Find(id);
-                        if (product != null)
+                        var category = context.Categories.Find(id);
+                        if (category != null)
                         {
                             IActionResult applyChanges()
                             {
-                                product.Name = name;
-                                product.Description = description;
-                                product.Price = price;
-                                context.Products.Update(product);
+                                category.Name = name;
+                                category.Description = description;
+                                context.Categories.Update(category);
                                 context.SaveChanges();
                                 return Ok();
                             }
-                            
-                            if (!product.Name.ToLower().Equals(name.ToLower())) 
+
+                            if (!category.Name.ToLower().Equals(name.ToLower()))
                             {
                                 if (context.Products.Any(x => x.Name.ToLower().Equals(name.ToLower())))
                                 {
