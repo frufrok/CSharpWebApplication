@@ -30,7 +30,7 @@ namespace CSharpWebApplication.Controllers
         }
 
         [HttpPost("postCategory")]
-        public IActionResult PostCategory([FromQuery] string name, string description)
+        public IActionResult AddCategory([FromQuery] string name, string description)
         {
             try
             {
@@ -58,7 +58,7 @@ namespace CSharpWebApplication.Controllers
             }
         }
         [HttpDelete("deleteCategory")]
-        public IActionResult DeleteCategory([FromQuery] int id)
+        public IActionResult RemoveCategory([FromQuery] int id)
         {
             try
             {
@@ -89,7 +89,7 @@ namespace CSharpWebApplication.Controllers
         }
 
         [HttpPut("putCategory")]
-        public IActionResult PutCategory([FromQuery] int id, string name, string description)
+        public IActionResult UpdateCategory([FromQuery] int id, string name, string description)
         {
             try
             {

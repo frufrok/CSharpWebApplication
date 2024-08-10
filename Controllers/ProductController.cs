@@ -30,7 +30,7 @@ namespace CSharpWebApplication.Controllers
             }
         }
         [HttpPost("postProduct")]
-        public IActionResult PostProduct([FromQuery] string name, string description, double price)
+        public IActionResult AddProduct([FromQuery] string name, string description, double price)
         {
             try
             {
@@ -59,7 +59,7 @@ namespace CSharpWebApplication.Controllers
             }
         }
         [HttpDelete("deleteProduct")]
-        public IActionResult DeleteProduct([FromQuery] int id)
+        public IActionResult RemoveProduct([FromQuery] int id)
         {
             try
             {
@@ -89,7 +89,7 @@ namespace CSharpWebApplication.Controllers
             }
         }
         [HttpPut("putProduct")]
-        public IActionResult PutProduct([FromQuery] int id, string name, string description, double price)
+        public IActionResult UpdateProduct([FromQuery] int id, string name, string description, double price)
         {
             try
             {
