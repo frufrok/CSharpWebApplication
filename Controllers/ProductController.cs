@@ -7,22 +7,21 @@ namespace CSharpWebApplication.Controllers
     [Route("[controller]")]
     public class ProductController : ControllerBase
     {
+        ProductContext _context = new ProductContext();
+
         [HttpGet("getProducts")]
-        public IActionResult GetProducts()
+        public ActionResult<List<Product>> GetProducts()
         {
             try
             {
-                using (var context = new ProductContext())
+                var products = _context.Products.Select(x => new Product()
                 {
-                    var products = context.Products.Select(x => new Product()
-                    {
-                        ID = x.ID,
-                        Name = x.Name,
-                        Description = x.Description,
-                        Price = x.Price
-                    });
-                    return Ok(products);
-                }
+                    ID = x.ID,
+                    Name = x.Name,
+                    Description = x.Description,
+                    Price = x.Price
+                });
+                return Ok(products);
             }
             catch
             {
@@ -30,32 +29,30 @@ namespace CSharpWebApplication.Controllers
             }
         }
         [HttpPost("postProduct")]
-        public IActionResult PostProduct([FromQuery] string name, string description, double price)
+        public IActionResult PostProduct([FromQuery] string name, string description, double price, int categoryID)
         {
             try
             {
-                using (var context = new ProductContext())
+                if (!_context.Products.Any(x => x.Name.ToLower().Equals(name.ToLower())))
                 {
-                    if (!context.Products.Any(x => x.Name.ToLower().Equals(name.ToLower())))
+                    _context.Add(new Product()
                     {
-                        context.Add(new Product()
-                        {
-                            Name = name,
-                            Description = description,
-                            Price = price
-                        });
-                        context.SaveChanges();
-                        return Ok();
-                    }
-                    else
-                    {
-                        return StatusCode(409);
-                    }
+                        Name = name,
+                        Description = description,
+                        Price = price,
+                        CategoryID = categoryID
+                    });
+                    _context.SaveChanges();
+                    return Ok();
+                }
+                else
+                {
+                    return StatusCode(409);
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                return StatusCode(500);
+                return StatusCode(500, $"{ex.Message}\r\n{ex.InnerException}");
             }
         }
         [HttpDelete("deleteProduct")]
@@ -63,15 +60,13 @@ namespace CSharpWebApplication.Controllers
         {
             try
             {
-                using (var context = new ProductContext())
-                {
-                    if (context.Products.Any(x => x.ID == id))
+                    if (_context.Products.Any(x => x.ID == id))
                     {
-                        var product = context.Products.Find(id);
+                        var product = _context.Products.Find(id);
                         if (product != null)
                         {
-                            context.Products.Remove(product);
-                            context.SaveChanges();
+                            _context.Products.Remove(product);
+                            _context.SaveChanges();
                             return Ok();
                         }
                         else return StatusCode(409);
@@ -81,7 +76,6 @@ namespace CSharpWebApplication.Controllers
                         return StatusCode(409);
                     }
 
-                }
             }
             catch
             {
@@ -93,11 +87,9 @@ namespace CSharpWebApplication.Controllers
         {
             try
             {
-                using (var context = new ProductContext())
-                {
-                    if (context.Products.Any(x => x.ID == id))
+                    if (_context.Products.Any(x => x.ID == id))
                     {
-                        var product = context.Products.Find(id);
+                        var product = _context.Products.Find(id);
                         if (product != null)
                         {
                             IActionResult applyChanges()
@@ -105,14 +97,14 @@ namespace CSharpWebApplication.Controllers
                                 product.Name = name;
                                 product.Description = description;
                                 product.Price = price;
-                                context.Products.Update(product);
-                                context.SaveChanges();
+                                _context.Products.Update(product);
+                                _context.SaveChanges();
                                 return Ok();
                             }
                             
                             if (!product.Name.ToLower().Equals(name.ToLower())) 
                             {
-                                if (context.Products.Any(x => x.Name.ToLower().Equals(name.ToLower())))
+                                if (_context.Products.Any(x => x.Name.ToLower().Equals(name.ToLower())))
                                 {
                                     return StatusCode(409);
                                 }
@@ -129,7 +121,6 @@ namespace CSharpWebApplication.Controllers
                     {
                         return StatusCode(409);
                     }
-                }
             }
             catch
             {

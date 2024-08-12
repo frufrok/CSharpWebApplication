@@ -7,21 +7,19 @@ namespace CSharpWebApplication.Controllers
     [Route("[controller]")]
     public class CategoryController : ControllerBase
     {
+        ProductContext _context = new ProductContext();
         [HttpGet("getCategories")]
-        public IActionResult GetCategories()
+        public ActionResult<List<Category>> GetCategories()
         {
             try
             {
-                using (var context = new ProductContext())
+                var categories = _context.Categories.Select(x => new Category()
                 {
-                    var categories = context.Categories.Select(x => new Category()
-                    {
-                        ID = x.ID,
-                        Name = x.Name,
-                        Description = x.Description
-                    });
-                    return Ok(categories);
-                }
+                    ID = x.ID,
+                    Name = x.Name,
+                    Description = x.Description
+                });
+                return Ok(categories);
             }
             catch
             {
@@ -30,26 +28,24 @@ namespace CSharpWebApplication.Controllers
         }
 
         [HttpPost("postCategory")]
-        public IActionResult PostCategory([FromQuery] string name, string description)
+        public ActionResult<int> PostCategory([FromQuery] string name, string description)
         {
             try
             {
-                using (var context = new ProductContext())
+                if (!_context.Categories.Any(x => x.Name.ToLower().Equals(name.ToLower())))
                 {
-                    if (!context.Categories.Any(x => x.Name.ToLower().Equals(name.ToLower())))
+                    var category = new Category()
                     {
-                        context.Add(new Category()
-                        {
-                            Name = name,
-                            Description = description,
-                        });
-                        context.SaveChanges();
-                        return Ok();
-                    }
-                    else
-                    {
-                        return StatusCode(409);
-                    }
+                        Name = name,
+                        Description = description,
+                    };
+                    _context.Add(category);
+                    _context.SaveChanges();
+                    return Ok(category.ID);
+                }
+                else
+                {
+                    return StatusCode(409);
                 }
             }
             catch
@@ -62,24 +58,20 @@ namespace CSharpWebApplication.Controllers
         {
             try
             {
-                using (var context = new ProductContext())
+                if (_context.Categories.Any(x => x.ID == id))
                 {
-                    if (context.Categories.Any(x => x.ID == id))
+                    var category = _context.Categories.Find(id);
+                    if (category != null)
                     {
-                        var category = context.Categories.Find(id);
-                        if (category != null)
-                        {
-                            context.Categories.Remove(category);
-                            context.SaveChanges();
-                            return Ok();
-                        }
-                        else return StatusCode(409);
+                        _context.Categories.Remove(category);
+                        _context.SaveChanges();
+                        return Ok();
                     }
-                    else
-                    {
-                        return StatusCode(409);
-                    }
-
+                    else return StatusCode(409);
+                }
+                else
+                {
+                    return StatusCode(409);
                 }
             }
             catch
@@ -89,45 +81,42 @@ namespace CSharpWebApplication.Controllers
         }
 
         [HttpPut("putCategory")]
-        public IActionResult PutCategory([FromQuery] int id, string name, string description)
+        public ActionResult PutCategory([FromQuery] int id, string name, string description)
         {
             try
             {
-                using (var context = new ProductContext())
+                if (_context.Categories.Any(x => x.ID == id))
                 {
-                    if (context.Categories.Any(x => x.ID == id))
+                    var category = _context.Categories.Find(id);
+                    if (category != null)
                     {
-                        var category = context.Categories.Find(id);
-                        if (category != null)
+                        ActionResult applyChanges()
                         {
-                            IActionResult applyChanges()
-                            {
-                                category.Name = name;
-                                category.Description = description;
-                                context.Categories.Update(category);
-                                context.SaveChanges();
-                                return Ok();
-                            }
-
-                            if (!category.Name.ToLower().Equals(name.ToLower()))
-                            {
-                                if (context.Products.Any(x => x.Name.ToLower().Equals(name.ToLower())))
-                                {
-                                    return StatusCode(409);
-                                }
-                                else return applyChanges();
-                            }
-                            else
-                            {
-                                return applyChanges();
-                            }
+                            category.Name = name;
+                            category.Description = description;
+                            _context.Categories.Update(category);
+                            _context.SaveChanges();
+                            return Ok();
                         }
-                        else return StatusCode(409);
+
+                        if (!category.Name.ToLower().Equals(name.ToLower()))
+                        {
+                            if (_context.Products.Any(x => x.Name.ToLower().Equals(name.ToLower())))
+                            {
+                                return StatusCode(409);
+                            }
+                            else return applyChanges();
+                        }
+                        else
+                        {
+                            return applyChanges();
+                        }
                     }
-                    else
-                    {
-                        return StatusCode(409);
-                    }
+                    else return StatusCode(409);
+                }
+                else
+                {
+                    return StatusCode(409);
                 }
             }
             catch

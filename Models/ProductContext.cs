@@ -40,7 +40,7 @@ namespace CSharpWebApplication.Models
 
                 e.HasOne(x => x.Category)
                     .WithMany(y => y.Products)
-                    .HasForeignKey(x => x.ID)
+                    .HasForeignKey(x => x.CategoryID)
                     .HasConstraintName("CategoryToProduct");
             });
 
@@ -91,10 +91,10 @@ namespace CSharpWebApplication.Models
                     .HasColumnName("StorageID")
                     .IsRequired(true);
 
-                e.HasOne(x => x.Product)
-                    .WithMany(y => y.ProductStorages)
-                    .HasForeignKey(x => x.ProductID)
-                    .HasConstraintName("ProductToProductStorage");
+                //e.HasOne(x => x.Product)
+                    //.WithMany(y => y.ProductStorages)
+                    //.HasForeignKey(x => x.ProductID)
+                    //.HasConstraintName("ProductToProductStorage");
 
                 e.HasOne(x => x.Storage).WithMany(y => y.ProductStorages)
                     .HasForeignKey(x => x.StorageID)
