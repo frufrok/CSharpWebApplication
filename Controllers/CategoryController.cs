@@ -7,7 +7,12 @@ namespace CSharpWebApplication.Controllers
     [Route("[controller]")]
     public class CategoryController : ControllerBase
     {
-        ProductContext _context = new ProductContext();
+        ProductContext _context;
+        public CategoryController(ProductContext context)
+        {
+            _context = context;
+        }
+
         [HttpGet("get")]
         public ActionResult<List<Category>> Get()
         {

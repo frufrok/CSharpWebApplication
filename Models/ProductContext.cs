@@ -4,14 +4,21 @@ namespace CSharpWebApplication.Models
 {
     public class ProductContext : DbContext
     {
+        private readonly string _connectionString;
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<Storage> Storages { get; set; }
         public virtual DbSet<ProductStorage> ProductStorages { get; set; }
 
+        public ProductContext() { }
+        public ProductContext(string connectionString)
+        {
+            this._connectionString = connectionString;
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=productsdb;Username=postgres;Password=password").UseLazyLoadingProxies();
+            optionsBuilder.UseNpgsql(_connectionString).UseLazyLoadingProxies();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
