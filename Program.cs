@@ -17,6 +17,10 @@ namespace CSharpWebApplication
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddMemoryCache(options =>
+            {
+                options.TrackStatistics = true;
+            });
 
             builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
             

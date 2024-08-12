@@ -1,5 +1,7 @@
 ﻿using CSharpWebApplication.Models;
+using CSharpWebApplication.OutModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace CSharpWebApplication.Controllers
 {
@@ -7,28 +9,43 @@ namespace CSharpWebApplication.Controllers
     [Route("[controller]")]
     public class CategoryController : ControllerBase
     {
-        ProductContext _context;
-        public CategoryController(ProductContext context)
+        private readonly ProductContext _context;
+        private readonly IMemoryCache _cache;
+        public CategoryController(ProductContext context, IMemoryCache cache)
         {
             _context = context;
+            _cache = cache;
         }
 
-        [HttpGet("get")]
-        public ActionResult<List<Category>> Get()
+        [HttpGet("GetCategories")]
+        public ActionResult<IEnumerable<CategoryOutModel>> GetCategories()
         {
-            try
+            if (_cache.TryGetValue("categories", out List<CategoryOutModel> categories))
             {
-                var categories = _context.Categories.Select(x => new Category()
-                {
-                    ID = x.ID,
-                    Name = x.Name,
-                    Description = x.Description
-                });
-                return Ok(categories);
+                return categories;
             }
-            catch
+            else
             {
-                return StatusCode(500);
+                try
+                {
+                    var result = _context.Categories.Select(x => new CategoryOutModel()
+                    {
+                        ID = x.ID,
+                        Name = x.Name,
+                        Description = x.Description
+                    }).ToList();
+                    _cache.Set("categories", result.Select(x => new CategoryOutModel() 
+                        {
+                            ID = x.ID, 
+                            Name = x.Name.ToUpper(), 
+                            Description = x.Description 
+                        }).ToList(), TimeSpan.FromMinutes(30));
+                    return Ok(result);
+                }
+                catch
+                {
+                    return StatusCode(500);
+                }
             }
         }
 
@@ -46,6 +63,7 @@ namespace CSharpWebApplication.Controllers
                     };
                     _context.Add(category);
                     _context.SaveChanges();
+                    _cache.Remove("categories");
                     return Ok(category.ID);
                 }
                 else
@@ -70,6 +88,7 @@ namespace CSharpWebApplication.Controllers
                     {
                         _context.Categories.Remove(category);
                         _context.SaveChanges();
+                        _cache.Remove("categories");
                         return Ok();
                     }
                     else return StatusCode(409);
@@ -101,6 +120,7 @@ namespace CSharpWebApplication.Controllers
                             category.Description = description;
                             _context.Categories.Update(category);
                             _context.SaveChanges();
+                            _cache.Remove("categories");
                             return Ok();
                         }
 
@@ -128,6 +148,12 @@ namespace CSharpWebApplication.Controllers
             {
                 return StatusCode(500);
             }
+        }
+
+        [HttpGet(template:"GetCacheStatistics")]
+        public ActionResult<MemoryCacheStatistics> GetCacheStatistics()
+        {
+            return _cache.GetCurrentStatistics();
         }
     }
 }
