@@ -9,8 +9,8 @@ namespace CSharpWebApplication.Controllers
     {
         ProductContext _context = new ProductContext();
 
-        [HttpGet("getProducts")]
-        public ActionResult<List<Product>> GetProducts()
+        [HttpGet("get")]
+        public ActionResult<List<Product>> Get()
         {
             try
             {
@@ -28,22 +28,23 @@ namespace CSharpWebApplication.Controllers
                 return StatusCode(500);
             }
         }
-        [HttpPost("postProduct")]
-        public IActionResult PostProduct([FromQuery] string name, string description, double price, int categoryID)
+        [HttpPost("add")]
+        public ActionResult<int> Add([FromQuery] string name, string description, double price, int categoryID)
         {
             try
             {
                 if (!_context.Products.Any(x => x.Name.ToLower().Equals(name.ToLower())))
                 {
-                    _context.Add(new Product()
+                    var product = new Product()
                     {
                         Name = name,
                         Description = description,
                         Price = price,
                         CategoryID = categoryID
-                    });
+                    };
+                    _context.Add(product);
                     _context.SaveChanges();
-                    return Ok();
+                    return Ok(product.ID);
                 }
                 else
                 {
@@ -55,8 +56,8 @@ namespace CSharpWebApplication.Controllers
                 return StatusCode(500, $"{ex.Message}\r\n{ex.InnerException}");
             }
         }
-        [HttpDelete("deleteProduct")]
-        public IActionResult DeleteProduct([FromQuery] int id)
+        [HttpDelete("delete")]
+        public ActionResult Delete([FromQuery] int id)
         {
             try
             {
@@ -82,8 +83,8 @@ namespace CSharpWebApplication.Controllers
                 return StatusCode(500);
             }
         }
-        [HttpPut("putProduct")]
-        public IActionResult PutProduct([FromQuery] int id, string name, string description, double price)
+        [HttpPut("update")]
+        public ActionResult Update([FromQuery] int id, string name, string description, double price)
         {
             try
             {
@@ -92,7 +93,7 @@ namespace CSharpWebApplication.Controllers
                         var product = _context.Products.Find(id);
                         if (product != null)
                         {
-                            IActionResult applyChanges()
+                            ActionResult applyChanges()
                             {
                                 product.Name = name;
                                 product.Description = description;

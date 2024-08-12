@@ -8,8 +8,8 @@ namespace CSharpWebApplication.Controllers
     public class CategoryController : ControllerBase
     {
         ProductContext _context = new ProductContext();
-        [HttpGet("getCategories")]
-        public ActionResult<List<Category>> GetCategories()
+        [HttpGet("get")]
+        public ActionResult<List<Category>> Get()
         {
             try
             {
@@ -27,8 +27,8 @@ namespace CSharpWebApplication.Controllers
             }
         }
 
-        [HttpPost("postCategory")]
-        public ActionResult<int> PostCategory([FromQuery] string name, string description)
+        [HttpPost("add")]
+        public ActionResult<int> Add([FromQuery] string name, string description)
         {
             try
             {
@@ -53,8 +53,8 @@ namespace CSharpWebApplication.Controllers
                 return StatusCode(500);
             }
         }
-        [HttpDelete("deleteCategory")]
-        public IActionResult DeleteCategory([FromQuery] int id)
+        [HttpDelete("delete")]
+        public IActionResult Delete([FromQuery] int id)
         {
             try
             {
@@ -80,8 +80,8 @@ namespace CSharpWebApplication.Controllers
             }
         }
 
-        [HttpPut("putCategory")]
-        public ActionResult PutCategory([FromQuery] int id, string name, string description)
+        [HttpPut("update")]
+        public ActionResult Update([FromQuery] int id, string name, string description)
         {
             try
             {
