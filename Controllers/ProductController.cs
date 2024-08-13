@@ -1,5 +1,8 @@
 ﻿using CSharpWebApplication.Models;
+using CSharpWebApplication.OutModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using System.Text;
 
 namespace CSharpWebApplication.Controllers
 {
@@ -7,9 +10,14 @@ namespace CSharpWebApplication.Controllers
     [Route("[controller]")]
     public class ProductController : ControllerBase
     {
-        ProductContext _context = new ProductContext();
+        ProductContext _context;
 
-        [HttpGet("get")]
+        public ProductController(ProductContext context)
+        {
+            _context = context;
+        }
+
+        [HttpGet("GetProducts")]
         public ActionResult<List<Product>> Get()
         {
             try
@@ -28,6 +36,21 @@ namespace CSharpWebApplication.Controllers
                 return StatusCode(500);
             }
         }
+
+        [HttpGet("GetProductsCSV")]
+        public FileContentResult GetProductsCSV()
+        {
+            var books = _context.Products.Select(x => new ProductOutModel()
+            {
+                ID = x.ID,
+                Name = x.Name,
+                Description = x.Description,
+                Price = x.Price,
+            }).ToList();
+            var content = GetCsv(books);
+            return File(Encoding.UTF8.GetBytes(content), "text/csv", "products.csv");
+        }
+
         [HttpPost("add")]
         public ActionResult<int> Add([FromQuery] string name, string description, double price, int categoryID)
         {
@@ -127,6 +150,16 @@ namespace CSharpWebApplication.Controllers
             {
                 return StatusCode(500);
             }
+        }
+
+        private string GetCsv(IEnumerable<ProductOutModel> products)
+        {
+            var sb = new StringBuilder();
+            foreach (var product in products)
+            {
+                sb.AppendLine($"{product.ID};{product.Name};{product.Description};{product.Price}");
+            }
+            return sb.ToString();
         }
     }
 }
