@@ -2,6 +2,7 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using CSharpWebApplication.Models;
+using Microsoft.Extensions.FileProviders;
 
 namespace CSharpWebApplication
 {
@@ -43,10 +44,19 @@ namespace CSharpWebApplication
                 app.UseSwaggerUI();
             }
 
+            var staticFilePath = Path.Combine(Directory.GetCurrentDirectory(), "StaticFiles");
+            Directory.CreateDirectory(staticFilePath);
+
+
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(staticFilePath),
+                RequestPath = "/static"
+            });
+
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 

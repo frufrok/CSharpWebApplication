@@ -2,6 +2,7 @@
 using CSharpWebApplication.OutModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using System.Text.Json;
 
 namespace CSharpWebApplication.Controllers
 {
@@ -154,6 +155,14 @@ namespace CSharpWebApplication.Controllers
         public ActionResult<MemoryCacheStatistics> GetCacheStatistics()
         {
             return _cache.GetCurrentStatistics();
+        }
+
+        [HttpGet(template:"GetCacheStatisticsUrl")]
+        public ActionResult<string> GetCacheStatisticsUrl()
+        {
+            var filename = $"cashe_statistics_{DateTime.Now.ToBinary().ToString()}.txt";
+            System.IO.File.WriteAllText(Path.Combine(Directory.GetCurrentDirectory(), "StaticFiles", filename), JsonSerializer.Serialize<MemoryCacheStatistics>(_cache.GetCurrentStatistics()));
+            return $"https://{Request.Host.ToString()}/static/{filename}";
         }
     }
 }
