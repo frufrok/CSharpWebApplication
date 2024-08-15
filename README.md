@@ -56,5 +56,35 @@ dotnet ef database update
 - Все части решения используют общую БД. Строка подключения настраивается в appsettings.json отдельно для CSharpWebApplication и ProductStorageAPI.
 - CSharpWebApplication и ProductStorageAPI запускаются на разных портах. Там и там работает Swagger.
 - Gateway объединяет API из разных проектов, запускается через порт 7201.
+- Для проекта ProductStorageAPI реализован доступ через GraphQL (). Общий функционал работы с БД через контроллер и GraphQL перенесен в класс ProductStorageRepository.
 
+Пример запроса для GraphQL:
+
+```
+{
+  storages{
+    id,
+    name,
+    description
+  }
+}
+```
+
+Пример мутации для GraphQL:
+
+```
+mutation addStorage{
+  addStorage(input: {
+    name: "GraphQL склад",
+    description : "Склад создан через GraphQL"
+  })
+  {
+    storage{
+      id,
+      name,
+      description
+    }
+  }
+}
+```
 	

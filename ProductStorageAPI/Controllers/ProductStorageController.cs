@@ -4,6 +4,7 @@ using AutoMapper;
 using ProductStorageAPI.DTO.Mapping;
 using ProductStorageAPI.DTO;
 using System.Xml.Linq;
+using ProductStorageAPI.Repository;
 
 namespace ProductStorageAPI.Controllers
 {
@@ -13,17 +14,19 @@ namespace ProductStorageAPI.Controllers
     {
         private readonly ProductContext _context;
         private readonly Mapper _mapper;
+        private readonly ProductStorageRepository _repo;
 
-        public ProductStorageController(ProductContext context)
+        public ProductStorageController(ProductContext context, ProductStorageRepository repo)
         {
             _context = context;
+            _repo = repo;
             _mapper = new Mapper(new MapperConfiguration(config => config.AddProfile(new MappingProfile())));
         }
 
         [HttpGet(template: "GetStorages")]
         public ActionResult GetStorages()
         {
-            return Ok(_context.Storages.Select(x => _mapper.Map<StorageDto>(x)).ToList());
+            return Ok(_repo.GetStorages());
         }
 
         [HttpPost(template: "AddStorage")]
@@ -31,17 +34,10 @@ namespace ProductStorageAPI.Controllers
         {
             if (name.Length > 0)
             {
-                int currentId = GetStorageIdPrivate(name);
+                int currentId = _repo.GetStorageId(name);
                 if (currentId == -1)
                 {
-                    var result = new Storage()
-                    {
-                        Name = name,
-                        Description = description
-                    };
-                    _context.Storages.Add(result);
-                    _context.SaveChanges();
-                    return Ok(result.ID);
+                    return Ok(_repo.AddStorage(name, description));
                 }
                 else return StatusCode(400, $"Склад с именем \"{name}\" уже существует (ID={currentId}).");
             }
@@ -51,7 +47,7 @@ namespace ProductStorageAPI.Controllers
         [HttpGet(template:"GetStorageId")]
         public ActionResult GetStorageId(string name)
         {
-            return Ok(GetStorageIdPrivate(name));
+            return Ok(_repo.GetStorageId(name));
         }
 
         [HttpDelete(template: "DeleteStorage")]
@@ -71,7 +67,7 @@ namespace ProductStorageAPI.Controllers
         [HttpGet("GetProductsAllocation")]
         public ActionResult GetProductsAllocation()
         {
-            return Ok(_context.ProductStorages.Select(x => _mapper.Map<ProductStorageDto>(x)).ToList());
+            return Ok(_repo.GetProductsAllocation());
         }
 
         [HttpPost(template:"AddProductsToStorage")]
@@ -178,17 +174,6 @@ namespace ProductStorageAPI.Controllers
         {
             return _context.Storages.Any(x => x.ID == storageId);
         }
-        private bool StorageNameIsFree(string name)
-        {
-            return GetStorageIdPrivate(name) > -1;
-        }
-        private int GetStorageIdPrivate(string name)
-        {
-            var result = _context.Storages.FirstOrDefault(x => x.Name.ToLower().Equals(name.ToLower()));
-            if (result != null) return result.ID;
-            else return -1;
-        }
-
         private ActionResult HandleProducts(int productId, int storageId, int count, Func<int, int, int, ActionResult> handling)
         {
             if (VerifyProduct(productId))
