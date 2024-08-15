@@ -1,4 +1,4 @@
-﻿using CSharpWebApplication.Models;
+﻿using SharedModels.Models;
 using CSharpWebApplication.OutModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;

@@ -5,6 +5,10 @@ VisualStudioVersion = 17.9.34902.65
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSharpWebApplication", "ProductAPI\CSharpWebApplication.csproj", "{AB0CDE69-F3F9-4D8E-BA38-4B92C7BD859E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductStorageAPI", "ProductStorageAPI\ProductStorageAPI.csproj", "{583EEBD8-B657-4C40-8799-C55B20428848}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedModels", "SharedModels\SharedModels.csproj", "{5A06BBA8-54F4-43A5-9ED7-53082C86DC51}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{AB0CDE69-F3F9-4D8E-BA38-4B92C7BD859E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AB0CDE69-F3F9-4D8E-BA38-4B92C7BD859E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AB0CDE69-F3F9-4D8E-BA38-4B92C7BD859E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{583EEBD8-B657-4C40-8799-C55B20428848}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{583EEBD8-B657-4C40-8799-C55B20428848}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{583EEBD8-B657-4C40-8799-C55B20428848}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{583EEBD8-B657-4C40-8799-C55B20428848}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A06BBA8-54F4-43A5-9ED7-53082C86DC51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A06BBA8-54F4-43A5-9ED7-53082C86DC51}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A06BBA8-54F4-43A5-9ED7-53082C86DC51}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A06BBA8-54F4-43A5-9ED7-53082C86DC51}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

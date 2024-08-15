@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace CSharpWebApplication.Models
+namespace SharedModels.Models
 {
     public class ProductContext : DbContext
     {

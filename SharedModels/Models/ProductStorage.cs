@@ -1,4 +1,4 @@
-﻿namespace CSharpWebApplication.Models
+﻿namespace SharedModels.Models
 {
     public class ProductStorage : BaseModel
     {

@@ -1,4 +1,4 @@
-﻿using CSharpWebApplication.Models;
+﻿using SharedModels.Models;
 
 namespace CSharpWebApplication.OutModels
 {
