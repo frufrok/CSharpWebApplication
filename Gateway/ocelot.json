@@ -1,0 +1,73 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/ProductStorage/{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7203
+        }
+      ],
+      "UpstreamPathTemplate": "/ProductStorage/{everything}",
+      "UpstreamHttpMethod": [ "Get", "Post", "Delete" ],
+      "SwaggerKey": "ProductStorageAPI"
+    },
+    {
+      "DownstreamPathTemplate": "/Product/{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7202
+        }
+      ],
+      "UpstreamPathTemplate": "/Product/{everything}",
+      "UpstreamHttpMethod": [ "Get", "Post", "Delete" ],
+      "SwaggerKey": "ProductAPI"
+    },
+    {
+      "DownstreamPathTemplate": "/Category/{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7202
+        }
+      ],
+      "UpstreamPathTemplate": "/Category/{everything}",
+      "UpstreamHttpMethod": [ "Get", "Post", "Delete" ],
+      "SwaggerKey": "ProductAPI"
+    }
+  ],
+
+  "GlobalConfiguration": {
+    "BaseUrl": "https://localhost:7201/swagger/"
+  },
+
+  "SwaggerEndPoints": [
+    {
+      "Key": "ProductStorageAPI",
+      "TransformByOcelogConfig": false,
+      "Config": [
+        {
+          "Name": "Product Storage API",
+          "Version": "v1",
+          "Url": "https://localhost:7203/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "ProductAPI",
+      "TransformByOcelogConfig": false,
+      "Config": [
+        {
+          "Name": "Product API",
+          "Version": "v1",
+          "Url": "https://localhost:7202/swagger/v1/swagger.json"
+        }
+      ]
+    }
+  ]
+
+}
