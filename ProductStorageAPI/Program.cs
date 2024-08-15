@@ -1,5 +1,6 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using AutoMapper;
 using SharedModels.Models;
 
 namespace ProductStorageAPI
@@ -26,6 +27,8 @@ namespace ProductStorageAPI
             {
                 containerBuilder.Register(c => new ProductContext(configRoot.GetConnectionString("db"))).InstancePerDependency();
             });
+
+
 
             var app = builder.Build();
 
