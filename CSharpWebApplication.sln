@@ -5,12 +5,14 @@ VisualStudioVersion = 17.9.34902.65
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSharpWebApplication", "ProductAPI\CSharpWebApplication.csproj", "{AB0CDE69-F3F9-4D8E-BA38-4B92C7BD859E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductStorageAPI", "ProductStorageAPI\ProductStorageAPI.csproj", "{583EEBD8-B657-4C40-8799-C55B20428848}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductStorageAPI", "ProductStorageAPI\ProductStorageAPI.csproj", "{583EEBD8-B657-4C40-8799-C55B20428848}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedModels", "SharedModels\SharedModels.csproj", "{5A06BBA8-54F4-43A5-9ED7-53082C86DC51}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedModels", "SharedModels\SharedModels.csproj", "{5A06BBA8-54F4-43A5-9ED7-53082C86DC51}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3BE941FF-6596-40E1-8589-CBA47E7C58DE}"
 	ProjectSection(SolutionItems) = preProject
+		docker build log.txt = docker build log.txt
+		Dockerfile = Dockerfile
 		README.md = README.md
 	EndProjectSection
 EndProject

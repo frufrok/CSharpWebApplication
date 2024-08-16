@@ -1,0 +1,74 @@
+Windows PowerShell
+(C) Корпорация Майкрософт (Microsoft Corporation). Все права защищены.
+
+PS C:\Users\User\source\repos\CSharpWebApplication> docker build -t psapi .
+[+] Building 1.1s (12/19)                                      docker:desktop-linux
+ => [internal] load build definition from Dockerfile                           0.0s
+ => => transferring dockerfile: 670B                                           0.0s 
+ => [internal] load metadata for mcr.microsoft.com/dotnet/aspnet:8.0           0.0s 
+ => [internal] load metadata for mcr.microsoft.com/dotnet/sdk:8.0              0.8s 
+ => [internal] load .dockerignore                                              0.0s
+ => => transferring context: 2B                                                0.0s 
+ => [build-env  1/11] FROM mcr.microsoft.com/dotnet/sdk:8.0@sha256:8c6beed050  0.0s 
+ => [runtime 1/3] FROM mcr.microsoft.com/dotnet/aspnet:8.0                     0.0s 
+ => => transferring context: 19.76kB                                           0.0s 
+ => CACHED [runtime 2/3] WORKDIR /app/ProductStorageAPI                        0.0s 
+ => CACHED [build-env  2/11] WORKDIR /app/                                     0.0s 
+ => CACHED [build-env  3/11] COPY ProductStorageAPI/ProductStorageAPI.csproj   0.0s 
+ => CACHED [build-env  4/11] COPY SharedModels/SharedModels.csproj ./SharedMo  0.0s 
+ => ERROR [build-env  5/11] WORKDIR /app/ProductStorageAPI                     0.1s 
+------
+ > [build-env  5/11] WORKDIR /app/ProductStorageAPI:
+------
+Dockerfile:5
+--------------------
+   3 |     COPY ProductStorageAPI/ProductStorageAPI.csproj ./ProductStorageAPI      
+   4 |     COPY SharedModels/SharedModels.csproj ./SharedModels
+   5 | >>> WORKDIR /app/ProductStorageAPI
+   6 |     RUN dotnet restore
+   7 |     WORKDIR /app/
+--------------------
+ERROR: failed to solve: mkdir /var/lib/docker/overlay2/1b7wc6ivjggprrrkssa3wzu3f/mer
+ged/app/ProductStorageAPI: not a directory
+PS C:\Users\User\source\repos\CSharpWebApplication> docker build -t psapi .
+[+] Building 231.6s (20/20) FINISHED                           docker:desktop-linux 
+ => [internal] load build definition from Dockerfile                           0.0s 
+ => => transferring dockerfile: 674B                                           0.0s 
+ => [internal] load metadata for mcr.microsoft.com/dotnet/aspnet:8.0           0.0s 
+ => [internal] load metadata for mcr.microsoft.com/dotnet/sdk:8.0              1.1s 
+ => [internal] load .dockerignore                                              0.0s 
+ => => transferring context: 2B                                                0.0s 
+ => [runtime 1/3] FROM mcr.microsoft.com/dotnet/aspnet:8.0                     0.0s 
+ => [build-env  1/11] FROM mcr.microsoft.com/dotnet/sdk:8.0@sha256:8c6beed050  0.0s 
+ => [internal] load build context                                              0.0s 
+ => => transferring context: 19.76kB                                           0.0s 
+ => CACHED [build-env  2/11] WORKDIR /app/                                     0.0s 
+ => CACHED [runtime 2/3] WORKDIR /app/ProductStorageAPI/                       0.0s 
+ => [build-env  3/11] COPY ProductStorageAPI/ProductStorageAPI.csproj ./Produ  0.1s 
+ => [build-env  4/11] COPY SharedModels/SharedModels.csproj ./SharedModels/    0.1s
+ => [build-env  5/11] WORKDIR /app/ProductStorageAPI/                          0.1s 
+ => [build-env  6/11] RUN dotnet restore                                     223.9s
+ => [build-env  7/11] WORKDIR /app/                                            0.1s
+ => [build-env  8/11] COPY ./ProductStorageAPI ./ProductStorageAPI             0.4s
+ => [build-env  9/11] COPY ./SharedModels ./SharedModels                       0.1s
+ => [build-env 10/11] WORKDIR /app/ProductStorageAPI/                          0.1s
+ => [build-env 11/11] RUN dotnet publish -c Release -o out                     5.0s 
+ => [runtime 3/3] COPY --from=build-env /app/ProductStorageAPI/out .           0.2s 
+ => exporting to image                                                         0.2s 
+ => => exporting layers                                                        0.1s 
+ => => writing image sha256:04d23158b9b4b9619b765d39a1f39f6b31365f7339e8a30ff  0.0s 
+ => => naming to docker.io/library/psapi                                       0.0s 
+
+What's next:
+    View a summary of image vulnerabilities and recommendations → docker scout quick
+view
+
+PS C:\Users\User\source\repos\CSharpWebApplication> docker run -p 8090:803 psapi     
+info: Microsoft.Hosting.Lifetime[14]
+      Now listening on: http://[::]:8080
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Production
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: /app/ProductStorageAPI
